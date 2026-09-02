@@ -48,6 +48,7 @@ export default function App() {
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/style-guide" element={<ProtectedLayout><StyleGuide /></ProtectedLayout>} />
           <Route path="/" element={<ProtectedLayout><Home /></ProtectedLayout>} />
+          <Route path="/profile" element={<Navigate to="/profile/me/edit" replace />} />
           <Route path="/profile/me/edit" element={<ProtectedLayout><ProfileEdit /></ProtectedLayout>} />
           <Route path="/profile/:id" element={<ProtectedLayout><ProfileView /></ProtectedLayout>} />
           <Route path="/people" element={<ProtectedLayout><PeopleSearch /></ProtectedLayout>} />
@@ -55,9 +56,12 @@ export default function App() {
           <Route path="/opportunities/:id" element={<ProtectedLayout><OpportunityDetail /></ProtectedLayout>} />
           <Route path="/clubs" element={<ProtectedLayout><ClubsDirectory /></ProtectedLayout>} />
           <Route path="/clubs/:id" element={<ProtectedLayout><ClubDetail /></ProtectedLayout>} />
-          <Route path="/genie" element={<ProtectedLayout><GenieChat /></ProtectedLayout>} />
+          <Route path="/genie" element={<ProtectedLayout><GenieChat initialMode="general" /></ProtectedLayout>} />
+          <Route path="/genie/academic" element={<ProtectedLayout><GenieChat initialMode="academic" /></ProtectedLayout>} />
+          <Route path="/genie/what-if" element={<ProtectedLayout><GenieChat initialMode="whatif" /></ProtectedLayout>} />
           <Route path="/stories" element={<ProtectedLayout><Stories /></ProtectedLayout>} />
           <Route path="/connections" element={<ProtectedLayout><Connections /></ProtectedLayout>} />
+          <Route path="/admin" element={<ProtectedLayout><PlaceholderPage title="Institutional & Club Admin Portal" /></ProtectedLayout>} />
           <Route path="/saved" element={<ProtectedLayout><PlaceholderPage title="Saved Items" /></ProtectedLayout>} />
         </Routes>
       </BrowserRouter>

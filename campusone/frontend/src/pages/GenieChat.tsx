@@ -4,12 +4,21 @@ import { Card, Badge, Button, Input, Tabs } from '../components/ui';
 import { sendChatMessage, fetchExamplePrompts } from '../lib/genie_chat_api';
 import type { ChatMessage } from '../lib/genie_chat_api';
 
-export const GenieChat: React.FC = () => {
-  const [activeMode, setActiveMode] = useState<'general' | 'academic' | 'whatif'>('general');
+interface GenieChatProps {
+  initialMode?: 'general' | 'academic' | 'whatif';
+}
+
+export const GenieChat: React.FC<GenieChatProps> = ({ initialMode = 'general' }) => {
+  const [activeMode, setActiveMode] = useState<'general' | 'academic' | 'whatif'>(initialMode);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [prompts, setPrompts] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setActiveMode(initialMode);
+  }, [initialMode]);
+
 
   useEffect(() => {
     fetchExamplePrompts(activeMode).then(setPrompts);

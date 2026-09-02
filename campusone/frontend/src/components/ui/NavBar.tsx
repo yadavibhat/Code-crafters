@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Avatar } from './Avatar';
+import { Logo } from './Logo';
 import styles from './NavBar.module.css';
 
 export interface NavItem {
@@ -35,9 +36,8 @@ export const NavBar: React.FC<NavBarProps> = ({
     <>
       <header className={styles.navHeader}>
         <div className={styles.container}>
-          <Link to="/" className={styles.brand}>
-            <span>Campus</span>
-            <span className={styles.brandAccent}>One</span>
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <Logo size={26} />
           </Link>
 
           <nav className={styles.desktopNav} aria-label="Main Navigation">

@@ -8,4 +8,6 @@ export * from './TagInput';
 export * from './Modal';
 export * from './Tabs';
 export * from './NavBar';
+export * from './Logo';
 export * from './StateComponents';
+
