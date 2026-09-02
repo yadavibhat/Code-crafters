@@ -1,6 +1,7 @@
 -- ============================================================================
 -- CampusOne Databricks Unity Catalog Schema & DDL Blueprint
 -- Catalog: campusone | Schema: core
+-- Compatible with Databricks Free Edition, Serverless SQL & Delta Lake
 -- ============================================================================
 
 CREATE CATALOG IF NOT EXISTS campusone;
@@ -15,8 +16,8 @@ CREATE TABLE IF NOT EXISTS campusone.core.source_registry (
     source_title VARCHAR(256) NOT NULL,
     source_type VARCHAR(64) NOT NULL, -- official_website | social_media | news_feed | academic_portal
     published_at TIMESTAMP,
-    retrieved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    trust_level VARCHAR(32) NOT NULL DEFAULT 'verified', -- verified | user_generated | synthetic
+    retrieved_at TIMESTAMP,
+    trust_level VARCHAR(32) NOT NULL, -- verified | user_generated | synthetic
     entity_type VARCHAR(64),
     entity_id VARCHAR(64)
 );
@@ -34,16 +35,16 @@ CREATE TABLE IF NOT EXISTS campusone.core.students (
     email_hash VARCHAR(128) NOT NULL, -- Encrypted/hashed email for session auth
     usn_encrypted VARCHAR(128) NOT NULL, -- Encrypted USN (Private by default)
     cgpa FLOAT, -- Opt-in visible
-    profile_mode VARCHAR(32) NOT NULL DEFAULT 'searchable', -- searchable | limited | private
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    profile_mode VARCHAR(32) NOT NULL, -- searchable | limited | private
+    created_at TIMESTAMP
 );
 
 -- 3. Student Skills (Tagged capabilities)
 CREATE TABLE IF NOT EXISTS campusone.core.student_skills (
     student_id VARCHAR(64) NOT NULL,
     skill VARCHAR(64) NOT NULL,
-    proficiency VARCHAR(32) DEFAULT 'Intermediate', -- Beginner | Intermediate | Advanced
-    source VARCHAR(32) DEFAULT 'self_reported',
+    proficiency VARCHAR(32), -- Beginner | Intermediate | Advanced
+    source VARCHAR(32),
     PRIMARY KEY (student_id, skill),
     FOREIGN KEY (student_id) REFERENCES campusone.core.students(student_id)
 );
@@ -61,7 +62,7 @@ CREATE TABLE IF NOT EXISTS campusone.core.student_interests (
 CREATE TABLE IF NOT EXISTS campusone.core.student_goals (
     student_id VARCHAR(64) NOT NULL,
     goal_text TEXT NOT NULL,
-    horizon VARCHAR(32) DEFAULT 'this_academic_year', -- immediate | this_semester | long_term
+    horizon VARCHAR(32), -- immediate | this_semester | long_term
     PRIMARY KEY (student_id, goal_text),
     FOREIGN KEY (student_id) REFERENCES campusone.core.students(student_id)
 );
@@ -70,7 +71,7 @@ CREATE TABLE IF NOT EXISTS campusone.core.student_goals (
 CREATE TABLE IF NOT EXISTS campusone.core.privacy_settings (
     student_id VARCHAR(64) NOT NULL,
     field_name VARCHAR(64) NOT NULL, -- usn | email | cgpa | skills | interests | projects
-    visibility VARCHAR(32) NOT NULL DEFAULT 'public', -- public | nmit_only | connections | private
+    visibility VARCHAR(32) NOT NULL, -- public | nmit_only | connections | private
     PRIMARY KEY (student_id, field_name),
     FOREIGN KEY (student_id) REFERENCES campusone.core.students(student_id)
 );
@@ -96,7 +97,7 @@ CREATE TABLE IF NOT EXISTS campusone.core.clubs (
     description TEXT,
     instagram_url VARCHAR(256),
     website_url VARCHAR(256),
-    recruitment_status VARCHAR(32) DEFAULT 'open', -- open | closed | upcoming
+    recruitment_status VARCHAR(32), -- open | closed | upcoming
     source_id VARCHAR(64),
     FOREIGN KEY (source_id) REFERENCES campusone.core.source_registry(source_id)
 );
@@ -105,8 +106,8 @@ CREATE TABLE IF NOT EXISTS campusone.core.clubs (
 CREATE TABLE IF NOT EXISTS campusone.core.club_memberships (
     student_id VARCHAR(64) NOT NULL,
     club_id VARCHAR(64) NOT NULL,
-    role VARCHAR(64) DEFAULT 'Member', -- Lead | Core Member | Member
-    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    role VARCHAR(64), -- Lead | Core Member | Member
+    joined_at TIMESTAMP,
     PRIMARY KEY (student_id, club_id),
     FOREIGN KEY (student_id) REFERENCES campusone.core.students(student_id),
     FOREIGN KEY (club_id) REFERENCES campusone.core.clubs(club_id)
@@ -119,7 +120,7 @@ CREATE TABLE IF NOT EXISTS campusone.core.club_posts (
     author_id VARCHAR(64) NOT NULL,
     caption TEXT NOT NULL,
     image_url VARCHAR(512),
-    posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    posted_at TIMESTAMP,
     FOREIGN KEY (club_id) REFERENCES campusone.core.clubs(club_id),
     FOREIGN KEY (author_id) REFERENCES campusone.core.students(student_id)
 );
@@ -131,12 +132,12 @@ CREATE TABLE IF NOT EXISTS campusone.core.opportunities (
     type VARCHAR(64) NOT NULL, -- Hackathon | Internship | Research | Competition | Project
     description TEXT NOT NULL,
     required_skills VARCHAR(256) NOT NULL,
-    eligibility VARCHAR(128) DEFAULT 'Open to all NMIT students',
+    eligibility VARCHAR(128),
     deadline TIMESTAMP NOT NULL,
     organizer VARCHAR(128) NOT NULL,
     source_url VARCHAR(512),
-    status VARCHAR(32) DEFAULT 'active', -- active | closed
-    is_synthetic BOOLEAN DEFAULT TRUE
+    status VARCHAR(32), -- active | closed
+    is_synthetic BOOLEAN
 );
 
 -- 12. Events (Campus activities & fest events)
@@ -159,7 +160,7 @@ CREATE TABLE IF NOT EXISTS campusone.core.campus_news (
     body TEXT NOT NULL,
     published_at TIMESTAMP NOT NULL,
     source_id VARCHAR(64),
-    category VARCHAR(64) DEFAULT 'Announcement', -- Announcement | Alumni Story | Placement News | Fest
+    category VARCHAR(64), -- Announcement | Alumni Story | Placement News | Fest
     FOREIGN KEY (source_id) REFERENCES campusone.core.source_registry(source_id)
 );
 
@@ -178,8 +179,8 @@ CREATE TABLE IF NOT EXISTS campusone.core.academic_resources (
 CREATE TABLE IF NOT EXISTS campusone.core.connections (
     from_id VARCHAR(64) NOT NULL,
     to_id VARCHAR(64) NOT NULL,
-    status VARCHAR(32) DEFAULT 'pending', -- pending | accepted | declined
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(32), -- pending | accepted | declined
+    created_at TIMESTAMP,
     PRIMARY KEY (from_id, to_id),
     FOREIGN KEY (from_id) REFERENCES campusone.core.students(student_id),
     FOREIGN KEY (to_id) REFERENCES campusone.core.students(student_id)
@@ -192,7 +193,7 @@ CREATE TABLE IF NOT EXISTS campusone.core.feedback (
     target_type VARCHAR(32) NOT NULL, -- student | opportunity | club
     target_id VARCHAR(64) NOT NULL,
     signal VARCHAR(32) NOT NULL, -- more_like_this | less_like_this
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP,
     FOREIGN KEY (student_id) REFERENCES campusone.core.students(student_id)
 );
 
@@ -200,12 +201,12 @@ CREATE TABLE IF NOT EXISTS campusone.core.feedback (
 CREATE TABLE IF NOT EXISTS campusone.core.student_outcomes (
     outcome_id VARCHAR(64) NOT NULL PRIMARY KEY,
     department VARCHAR(128) NOT NULL,
-    internship_bool BOOLEAN DEFAULT FALSE,
-    project_count INT DEFAULT 0,
-    cert_count INT DEFAULT 0,
+    internship_bool BOOLEAN,
+    project_count INT,
+    cert_count INT,
     placement_role VARCHAR(128),
-    avg_hours_per_week INT DEFAULT 5,
-    is_synthetic BOOLEAN DEFAULT TRUE
+    avg_hours_per_week INT,
+    is_synthetic BOOLEAN
 );
 
 
@@ -230,10 +231,10 @@ SELECT
         WHEN ps.visibility = 'public' OR ps.visibility IS NULL THEN s.cgpa 
         ELSE NULL 
     END AS visible_cgpa,
-    GROUP_CONCAT(DISTINCT sk.skill) AS skills_list,
-    GROUP_CONCAT(DISTINCT si.interest) AS interests_list,
-    GROUP_CONCAT(DISTINCT p.title) AS projects_list,
-    GROUP_CONCAT(DISTINCT c.name) AS clubs_list
+    CONCAT_WS(',', COLLECT_SET(sk.skill)) AS skills_list,
+    CONCAT_WS(',', COLLECT_SET(si.interest)) AS interests_list,
+    CONCAT_WS(',', COLLECT_SET(p.title)) AS projects_list,
+    CONCAT_WS(',', COLLECT_SET(c.name)) AS clubs_list
 FROM campusone.core.students s
 LEFT JOIN campusone.core.student_skills sk ON s.student_id = sk.student_id
 LEFT JOIN campusone.core.student_interests si ON s.student_id = si.student_id
