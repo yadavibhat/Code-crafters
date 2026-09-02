@@ -14,6 +14,7 @@ import { OpportunityDetail } from './pages/OpportunityDetail';
 import { ClubsDirectory } from './pages/ClubsDirectory';
 import { ClubDetail } from './pages/ClubDetail';
 import { GenieChat } from './pages/GenieChat';
+import { Stories } from './pages/Stories';
 import { Connections } from './pages/Connections';
 
 const PlaceholderPage: React.FC<{ title: string }> = ({ title }) => (
@@ -55,6 +56,7 @@ export default function App() {
           <Route path="/clubs" element={<ProtectedLayout><ClubsDirectory /></ProtectedLayout>} />
           <Route path="/clubs/:id" element={<ProtectedLayout><ClubDetail /></ProtectedLayout>} />
           <Route path="/genie" element={<ProtectedLayout><GenieChat /></ProtectedLayout>} />
+          <Route path="/stories" element={<ProtectedLayout><Stories /></ProtectedLayout>} />
           <Route path="/connections" element={<ProtectedLayout><Connections /></ProtectedLayout>} />
           <Route path="/saved" element={<ProtectedLayout><PlaceholderPage title="Saved Items" /></ProtectedLayout>} />
         </Routes>
