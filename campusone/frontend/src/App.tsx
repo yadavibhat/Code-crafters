@@ -11,6 +11,8 @@ import { ProfileView } from './pages/ProfileView';
 import { PeopleSearch } from './pages/PeopleSearch';
 import { OpportunitiesList } from './pages/OpportunitiesList';
 import { OpportunityDetail } from './pages/OpportunityDetail';
+import { ClubsDirectory } from './pages/ClubsDirectory';
+import { ClubDetail } from './pages/ClubDetail';
 import { Connections } from './pages/Connections';
 
 const PlaceholderPage: React.FC<{ title: string }> = ({ title }) => (
@@ -49,7 +51,8 @@ export default function App() {
           <Route path="/people" element={<ProtectedLayout><PeopleSearch /></ProtectedLayout>} />
           <Route path="/opportunities" element={<ProtectedLayout><OpportunitiesList /></ProtectedLayout>} />
           <Route path="/opportunities/:id" element={<ProtectedLayout><OpportunityDetail /></ProtectedLayout>} />
-          <Route path="/clubs" element={<ProtectedLayout><PlaceholderPage title="Clubs & Culture Wall" /></ProtectedLayout>} />
+          <Route path="/clubs" element={<ProtectedLayout><ClubsDirectory /></ProtectedLayout>} />
+          <Route path="/clubs/:id" element={<ProtectedLayout><ClubDetail /></ProtectedLayout>} />
           <Route path="/genie" element={<ProtectedLayout><PlaceholderPage title="Universal Genie" /></ProtectedLayout>} />
           <Route path="/connections" element={<ProtectedLayout><Connections /></ProtectedLayout>} />
           <Route path="/saved" element={<ProtectedLayout><PlaceholderPage title="Saved Items" /></ProtectedLayout>} />
