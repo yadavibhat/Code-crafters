@@ -21,12 +21,20 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [session, setSession] = useState<UserSession | null>(() => {
     const saved = localStorage.getItem('campusone_session');
-    return saved ? JSON.parse(saved) : {
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.name === 'Aditya Rao') {
+        parsed.name = 'Pranav Bhat';
+        parsed.email = 'pranav.bhat@nmit.ac.in';
+      }
+      return parsed;
+    }
+    return {
       token: 'demo_token_123',
       studentId: 'nmit_std_001',
       onboardingCompleted: true,
-      name: 'Aditya Rao',
-      email: 'aditya.rao@nmit.ac.in'
+      name: 'Pranav Bhat',
+      email: 'pranav.bhat@nmit.ac.in'
     };
   });
   const [loading] = useState(false);
@@ -34,10 +42,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     if (session) {
       localStorage.setItem('campusone_session', JSON.stringify(session));
+      // Fetch profile to ensure name is strictly synchronized with student profile DB
+      fetch(`http://localhost:8000/api/profile/${session.studentId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && data.name && data.name !== session.name) {
+            setSession((prev) => (prev ? { ...prev, name: data.name } : prev));
+          }
+        })
+        .catch(() => {});
     } else {
       localStorage.removeItem('campusone_session');
     }
-  }, [session]);
+  }, [session?.studentId]);
 
   const login = async (email: string, _otp: string): Promise<boolean> => {
     try {

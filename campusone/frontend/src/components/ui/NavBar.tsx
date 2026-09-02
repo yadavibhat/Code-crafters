@@ -26,7 +26,7 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 export const NavBar: React.FC<NavBarProps> = ({
-  user = { name: 'Aditya Rao' },
+  user = { name: 'Pranav Bhat' },
   onLogout,
 }) => {
   const location = useLocation();
