@@ -9,6 +9,7 @@ import { Onboarding } from './pages/Onboarding';
 import { ProfileEdit } from './pages/ProfileEdit';
 import { ProfileView } from './pages/ProfileView';
 import { PeopleSearch } from './pages/PeopleSearch';
+import { OpportunitiesList } from './pages/OpportunitiesList';
 import { OpportunityDetail } from './pages/OpportunityDetail';
 import { Connections } from './pages/Connections';
 
@@ -46,7 +47,7 @@ export default function App() {
           <Route path="/profile/me/edit" element={<ProtectedLayout><ProfileEdit /></ProtectedLayout>} />
           <Route path="/profile/:id" element={<ProtectedLayout><ProfileView /></ProtectedLayout>} />
           <Route path="/people" element={<ProtectedLayout><PeopleSearch /></ProtectedLayout>} />
-          <Route path="/opportunities" element={<ProtectedLayout><OpportunityDetail /></ProtectedLayout>} />
+          <Route path="/opportunities" element={<ProtectedLayout><OpportunitiesList /></ProtectedLayout>} />
           <Route path="/opportunities/:id" element={<ProtectedLayout><OpportunityDetail /></ProtectedLayout>} />
           <Route path="/clubs" element={<ProtectedLayout><PlaceholderPage title="Clubs & Culture Wall" /></ProtectedLayout>} />
           <Route path="/genie" element={<ProtectedLayout><PlaceholderPage title="Universal Genie" /></ProtectedLayout>} />

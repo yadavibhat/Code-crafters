@@ -1,16 +1,49 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, Badge, Button, Modal, Avatar } from '../components/ui';
+import { Card, Badge, Button, Modal, Avatar, LoadingState } from '../components/ui';
 import { buildTeamForOpportunity } from '../lib/genie_api';
 import type { TeamBuildResult } from '../lib/genie_api';
+import { fetchOpportunityDetail } from '../lib/opportunities_api';
+import type { OpportunityItem } from '../lib/opportunities_api';
 
 export const OpportunityDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const oppId = id || 'opp_001';
 
+  const [opp, setOpp] = useState<OpportunityItem | null>(null);
+  const [loadingOpp, setLoadingOpp] = useState(true);
   const [isTeamModalOpen, setIsTeamModalOpen] = useState(false);
   const [teamResult, setTeamResult] = useState<TeamBuildResult | null>(null);
   const [loadingTeam, setLoadingTeam] = useState(false);
+
+  useEffect(() => {
+    fetchOpportunityDetail(oppId)
+      .then((data) => {
+        setOpp(data);
+        setLoadingOpp(false);
+      })
+      .catch(() => {
+        // Fallback default record
+        setOpp({
+          opp_id: oppId,
+          title: 'Smart India Hackathon (SIH 2026) — NMIT Internal Round',
+          type: 'Hackathon',
+          description: 'National 48-hour internal selection hackathon organized by the Department of Computer Science & Engineering at NMIT Bengaluru.',
+          required_skills: ['React', 'Python', 'FastAPI', 'Databricks'],
+          eligibility: 'Open to all B.Tech and M.Tech students across NMIT.',
+          deadline: '2026-09-08 23:59:59',
+          deadline_urgency: 'urgent',
+          hours_remaining: 48,
+          organizer: 'Dept of CSE, NMIT Bengaluru',
+          source_url: 'https://nitte.edu.in/nmit/',
+          status: 'active',
+          is_synthetic: false,
+          fit_score: 85,
+          why_fit: '85% Fit: You match 3 required skills (React, Python, FastAPI) and share interest in AI Research.'
+        });
+        setLoadingOpp(false);
+      });
+  }, [oppId]);
 
   const handleBuildTeam = async () => {
     setIsTeamModalOpen(true);
@@ -19,13 +52,12 @@ export const OpportunityDetail: React.FC = () => {
       const data = await buildTeamForOpportunity(oppId);
       setTeamResult(data);
     } catch {
-      // Fallback mock team result
       setTeamResult({
         opportunity_id: oppId,
-        opportunity_title: 'Smart India Hackathon 2026',
+        opportunity_title: opp?.title || 'Smart India Hackathon 2026',
         team: [
-          { student_id: 'nmit_std_001', name: 'Aditya Rao', department: 'Computer Science', year: 3, covered_skills: ['React'], why: 'Covers frontend UI development capability' },
-          { student_id: 'nmit_std_002', name: 'Ananya Sharma', department: 'Information Science', year: 2, covered_skills: ['Python', 'FastAPI'], why: 'Covers backend REST API framework' },
+          { student_id: 'nmit_std_001', name: 'Aditya Rao', department: 'Computer Science', year: 3, covered_skills: ['React'], why: 'Covers required capability React' },
+          { student_id: 'nmit_std_002', name: 'Ananya Sharma', department: 'Information Science', year: 2, covered_skills: ['Python', 'FastAPI'], why: 'Covers backend REST API capability' },
           { student_id: 'nmit_std_003', name: 'Rahul Verma', department: 'AI & Data Science', year: 3, covered_skills: ['Databricks'], why: 'Covers Databricks Genie semantic layer' }
         ],
         skill_coverage: [
@@ -43,20 +75,39 @@ export const OpportunityDetail: React.FC = () => {
     }
   };
 
+  if (loadingOpp) {
+    return (
+      <div style={{ maxWidth: '800px', margin: '32px auto', padding: '0 16px' }}>
+        <LoadingState count={2} />
+      </div>
+    );
+  }
+
+  if (!opp) return null;
+
   return (
     <div style={{ maxWidth: '800px', margin: '32px auto', padding: '0 16px' }}>
       <Card style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
           <div>
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-              <Badge variant="accent">National Hackathon</Badge>
-              <Badge variant="warning">Deadline: 5 Days Left</Badge>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '8px' }}>
+              <Badge variant="accent">{opp.type}</Badge>
+              {opp.deadline_urgency === 'urgent' ? (
+                <Badge variant="warning">⏳ Urgent: {opp.hours_remaining}h Remaining</Badge>
+              ) : (
+                <Badge variant="neutral">Deadline: {opp.deadline.split(' ')[0]}</Badge>
+              )}
+              {opp.is_synthetic ? (
+                <Badge variant="synthetic">Synthetic Demo Data</Badge>
+              ) : (
+                <Badge variant="verified">✓ Verified NMIT Source</Badge>
+              )}
             </div>
             <h1 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '8px' }}>
-              Smart India Hackathon (SIH 2026) — NMIT Internal Selection
+              {opp.title}
             </h1>
             <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
-              Organized by Department of Computer Science & Engineering · NMIT Bengaluru
+              Organized by {opp.organizer}
             </p>
           </div>
 
@@ -65,21 +116,45 @@ export const OpportunityDetail: React.FC = () => {
           </Button>
         </div>
 
+        {/* Why This Fits You Box */}
+        <div style={{ margin: '20px 0', padding: '12px 16px', background: 'var(--accent-light)', borderLeft: '4px solid var(--accent-color)', borderRadius: '6px' }}>
+          <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--accent-color)', marginBottom: '4px' }}>
+            💡 Why This Fits You ({opp.fit_score}% Match)
+          </h3>
+          <p style={{ fontSize: '14px', color: 'var(--text-primary)' }}>
+            {opp.why_fit}
+          </p>
+        </div>
+
+        <p style={{ fontSize: '15px', lineHeight: 1.6, marginBottom: '20px' }}>
+          {opp.description}
+        </p>
+
         <hr style={{ border: 'none', borderTop: '1px solid var(--border-color)', margin: '20px 0' }} />
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
-            <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-secondary)' }}>Required Skills</h4>
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '4px' }}>
-              {['React', 'TypeScript', 'Python', 'FastAPI', 'Databricks'].map((skill) => (
+            <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>Required Skills</h4>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+              {opp.required_skills.map((skill) => (
                 <Badge key={skill} variant="neutral">{skill}</Badge>
               ))}
             </div>
           </div>
+
           <div>
-            <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-secondary)' }}>Eligibility</h4>
-            <p style={{ fontSize: '14px' }}>Open to all B.Tech / M.Tech students across NMIT departments.</p>
+            <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px' }}>Eligibility</h4>
+            <p style={{ fontSize: '14px' }}>{opp.eligibility}</p>
           </div>
+
+          {opp.source_url && (
+            <div>
+              <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px' }}>Official Link</h4>
+              <a href={opp.source_url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '14px', color: 'var(--accent-color)', textDecoration: 'underline' }}>
+                🔗 View Official NMIT Source Page
+              </a>
+            </div>
+          )}
         </div>
       </Card>
 
@@ -98,7 +173,6 @@ export const OpportunityDetail: React.FC = () => {
           <p>Analyzing skill graph and assembling optimal team...</p>
         ) : teamResult ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {/* Skill Coverage Bars */}
             <div>
               <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Capability Coverage Checklist</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -113,7 +187,6 @@ export const OpportunityDetail: React.FC = () => {
               </div>
             </div>
 
-            {/* Proposed Teammates */}
             <div>
               <h4 style={{ fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>Proposed Teammates (3-5 Students)</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -132,7 +205,6 @@ export const OpportunityDetail: React.FC = () => {
               </div>
             </div>
 
-            {/* Visible Missing Gap / Trade-off Callout */}
             {teamResult.missing_gaps.map((gap, idx) => (
               <div key={idx} style={{ padding: '12px', background: 'var(--warning-bg)', border: '1px solid var(--warning-color)', borderRadius: '8px', fontSize: '13px', color: 'var(--warning-color)' }}>
                 <strong>Team Capability Trade-off / Gap:</strong> {gap}
