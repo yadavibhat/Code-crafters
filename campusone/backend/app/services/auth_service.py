@@ -12,7 +12,7 @@ def is_valid_institutional_email(email: str) -> bool:
     """Verifies email ends with allowed domain or institutional pattern."""
     email_clean = email.strip().lower()
     allowed_domain = settings.ALLOWED_EMAIL_DOMAIN.strip().lower()
-    return email_clean.endswith(f"@{allowed_domain}") or email_clean.endswith(".nmit.ac.in") or email_clean.endswith("@nmit.ac.in") or allowed_domain in email_clean
+    return email_clean.endswith(f"@{allowed_domain}") or email_clean.endswith("@nitte.edu.in") or email_clean.endswith("@nmit.ac.in") or email_clean.endswith(".nmit.ac.in") or "nitte" in email_clean or "nmit" in email_clean
 
 def generate_otp(email: str) -> str:
     """Generates a 6-digit OTP for testing."""

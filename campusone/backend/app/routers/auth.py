@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, Header
+from app.core.config import settings
 from app.models.auth import OTPRequest, OTPVerify, AuthResponse
 from app.services.auth_service import is_valid_institutional_email, generate_otp, verify_otp_and_login, get_student_id_from_token
 
