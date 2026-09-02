@@ -101,7 +101,7 @@ def filter_profile_for_viewer(owner_id: str, viewer_id: Optional[str]) -> Dict[s
         "section": student.get("section", ""),
         "grad_year": student["grad_year"],
         "usn": student.get("usn_encrypted") if is_owner else None,
-        "cgpa": student.get("cgpa"),
+        "cgpa": student["cgpa"] if (is_owner or cgpa_visibility != "private") else None,
         "profile_mode": student["profile_mode"],
         "skills": skills,
         "interests": interests,
