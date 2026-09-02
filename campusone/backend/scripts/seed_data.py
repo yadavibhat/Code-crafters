@@ -83,24 +83,28 @@ def seed_database():
         ("src_nmit_main", "https://nitte.edu.in/nmit/", "NMIT Main Portal", "official_website", "verified", "Institution", "nmit"),
         ("src_nmit_clubs", "https://nitte.edu.in/nmit/clubs.php", "NMIT Student Clubs & Societies", "official_website", "verified", "Clubs", "clubs_nmit"),
         ("src_nmit_placements", "https://nitte.edu.in/nmit/placements.php", "NMIT Placements Statistics", "official_website", "verified", "Placements", "placements"),
-        ("src_nmit_alumni", "https://nitte.edu.in/nmit/alumni.php", "NMIT Alumni Spotlight", "news_feed", "verified", "Alumni", "alumni")
+        ("src_nmit_alumni", "https://nitte.edu.in/nmit/alumni-association.php", "NMIT Official Alumni Association", "news_feed", "verified", "Alumni", "alumni"),
+        ("src_nmithacks", "https://www.nmithacks.com/", "NMIT Hacks Portal", "official_website", "verified", "Hackathons", "nmit_hacks"),
+        ("src_gdgnmit", "https://gdg.community.dev/gdg-on-campus-nitte-meenakshi-institute-of-technology-bengaluru-india/", "GDG on Campus NMIT", "official_website", "verified", "Clubs", "gdg_nmit"),
+        ("src_ecellnmit", "https://www.ecellnmit.in/", "ENIGMA E-Cell NMIT", "official_website", "verified", "Clubs", "enigma_ecell_nmit"),
+        ("src_oscode", "https://www.oscode.co.in/", "OSCode NMIT Open Source", "official_website", "verified", "Clubs", "oscode_nmit")
     ]
     cursor.executemany(
         "INSERT INTO source_registry (source_id, source_url, source_title, source_type, trust_level, entity_type, entity_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
         sources
     )
 
-    # 2. Populating Real NMIT Clubs
-    print("[Seeding] 2. Populating NMIT Real Co-curricular Clubs")
+    # 2. Populating Verified NMIT Featured Clubs
+    print("[Seeding] 2. Populating Verified NMIT Featured Clubs")
     clubs = [
-        ("club_ncc", "NCC NMIT Wing", "social_impact", "Leadership, Discipline, Parade, Social Service", "National Cadet Corps unit at NMIT.", "https://instagram.com/ncc_nmit", "https://nitte.edu.in/nmit/", "open", "src_nmit_clubs"),
-        ("club_nss", "NSS NMIT Unit", "social_impact", "Community Service, Blood Donation, Environment", "National Service Scheme driving campus social impact.", "https://instagram.com/nss_nmit", "https://nitte.edu.in/nmit/", "open", "src_nmit_clubs"),
-        ("club_rotaract", "Rotaract Club of NMIT", "social_impact", "Youth Leadership, Event Organizing, Service", "Rotary youth wing promoting community development.", "https://instagram.com/rotaract_nmit", "https://nitte.edu.in/nmit/", "open", "src_nmit_clubs"),
-        ("club_chiguru", "Chiguru Cultural Forum", "cultural", "Kannada Literature, Folk Dance, Heritage", "NMIT cultural forum celebrating regional heritage.", "https://instagram.com/chiguru_nmit", "https://nitte.edu.in/nmit/", "open", "src_nmit_clubs"),
-        ("club_anaadyanta", "Anaadyanta Fest Committee", "cultural", "Music, Dance, Fashion, Fest Management", "Annual national cultural fest organization team.", "https://instagram.com/anaadyanta_nmit", "https://nitte.edu.in/nmit/", "upcoming", "src_nmit_clubs"),
-        ("club_ecell", "E-Cell NMIT", "competitive", "Entrepreneurship, Startups, Pitching, Incubation", "NMIT Innovation & Entrepreneurship Development Cell.", "https://instagram.com/ecell_nmit", "https://ecellnmit.in", "open", "src_nmit_clubs"),
-        ("club_robotics", "NMIT Robotics Club", "technical", "ROS2, Embedded Systems, Drones, Hardware", "Student hardware and robotics research collective.", "https://instagram.com/robotics_nmit", "https://nitte.edu.in/nmit/", "open", "src_nmit_clubs"),
-        ("club_ai", "NMIT AI & Data Guild", "technical", "Machine Learning, LLMs, Computer Vision, Kaggle", "Technical club focused on applied AI projects.", "https://instagram.com/ai_nmit", "https://nitte.edu.in/nmit/", "open", "src_nmit_clubs")
+        ("nmit_hacks", "NMIT Hacks", "technical", "Hackathons, Innovation, Web Dev, AI, Open Innovation", "NMIT Hacks is a student innovation and hackathon community associated with CSE ecosystem, hosting national-level 48-hour hackathons.", "https://www.instagram.com/nmit_hacks/", "https://www.nmithacks.com/", "open", "src_nmithacks"),
+        ("gdg_nmit", "GDG on Campus NMIT", "technical", "Google Tech, AI, GenAI, Competitive Coding, Hackathons", "Google Developer Groups on Campus at NMIT driving peer learning, Codesprint 4.0, and Solution Challenge.", "https://www.instagram.com/gdgnmit/", "https://gdg.community.dev/gdg-on-campus-nitte-meenakshi-institute-of-technology-bengaluru-india/", "open", "src_gdgnmit"),
+        ("enigma_ecell_nmit", "ENIGMA - E-Cell NMIT", "technical", "Entrepreneurship, Startups, Business Strategy, Pitching", "Student-led entrepreneurship cell hosting IDEATHON 6.0 and ENFINITY national entrepreneurship fest.", "https://www.instagram.com/ecellnmit/", "https://www.ecellnmit.in/", "open", "src_ecellnmit"),
+        ("oscode_nmit", "OSCode NMIT", "technical", "Open Source, Git, GitHub, Software Dev, AI", "Student technical community focused on open-source software, collaborative learning, and GitHub workshops.", "https://www.instagram.com/oscode_nmit/", "https://www.oscode.co.in/", "open", "src_oscode"),
+        ("mc_nmit", "MC NMIT", "cultural", "Public Speaking, Anchoring, Stage Hosting, Mic Handling", "Passion-oriented student club handling anchoring and stage-hosting responsibilities at Anaadyanta fest.", "https://www.instagram.com/mcnmit/", "https://nitte.edu.in/nmit/", "open", "src_nmit_clubs"),
+        ("sangharsh_nmit", "Sangharsh NMIT", "cultural", "Dance, Contemporary, Hip-Hop, Group Performance", "NMIT dance team founded in 2014, winners at Mood Indigo IIT Bombay and Pravah St. Josephs.", "https://www.instagram.com/sangharsh_nmit/", "https://nitte.edu.in/nmit/", "open", "src_nmit_clubs"),
+        ("music_club_nmit", "Music Club NMIT", "cultural", "Singing, Instrumental, Bands, Acoustic, Western & Indian", "Student cultural community for music enthusiasts, performing live acoustic and band shows.", "https://www.instagram.com/music_club_nmit/", "https://nitte.edu.in/nmit/", "open", "src_nmit_clubs"),
+        ("dop_nmit", "DOP NMIT", "cultural", "Photography, Visual Storytelling, Event Coverage, Documentation", "Department of Photography covering campus festivals, Anaadyanta, and professional student events.", "https://www.instagram.com/dop_nmit/", "https://nitte.edu.in/nmit/", "open", "src_nmit_clubs")
     ]
     cursor.executemany(
         "INSERT INTO clubs (club_id, name, category, culture_tags, description, instagram_url, website_url, recruitment_status, source_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -178,11 +182,11 @@ def seed_database():
     # 4. Generating 25 Synthetic Opportunities
     print("[Seeding] 4. Generating 25 Synthetic Opportunities")
     opp_titles = [
-        ("Smart India Hackathon (SIH 2026) - NMIT Internal Round", "Hackathon", "React, Python, FastAPI, Databricks", "Smart India Hackathon national competition team selection."),
+        ("NMIT Hacks 2026 - National 48hr Hackathon", "Hackathon", "React, Python, FastAPI, Databricks", "National level 48-hour hackathon organized by Department of Computer Science & Engineering."),
         ("NMIT AI & Autonomous Drones Research Assistantship", "Research", "Python, OpenCV, PyTorch, ROS2", "Research fellowship under NMIT Robotics Research Centre."),
-        ("E-Cell Pitch Fest 2026", "Competition", "UI/UX Design, Flutter, Python", "Annual NMIT pitch competition with incubation prizes."),
-        ("Campus Cloud Computing Internship", "Internship", "Docker, Kubernetes, Git, SQL", "Hands-on cloud infrastructure assistant role."),
-        ("Embedded Systems & IoT Hardware Challenge", "Hackathon", "Embedded C, Arduino, ROS2", "Hardware buildathon organized by NMIT Robotics Club.")
+        ("IDEATHON 6.0 - ENIGMA E-Cell NMIT", "Competition", "UI/UX Design, Flutter, Business Strategy", "Annual innovation and brainstorming competition to solve real-life issues."),
+        ("OSCode Open Source Developer Sprint", "Hackathon", "Git, GitHub, Python, Docker", "Collaborative open-source sprint hosted by OSCode NMIT."),
+        ("GDG Solution Challenge 2026", "Competition", "Google Tech, GenAI, Android, Flutter", "Global solution challenge building technology for sustainable development goals.")
     ]
 
     opp_rows = []
@@ -195,7 +199,7 @@ def seed_database():
         req_skills = template[2]
         desc = template[3]
         deadline = (now + timedelta(days=random.randint(2, 45))).strftime("%Y-%m-%d %H:%M:%S")
-        organizer = random.choice(["E-Cell NMIT", "NMIT Robotics Club", "Dept of CSE", "Dept of AI&DS"])
+        organizer = random.choice(["ENIGMA E-Cell NMIT", "GDG on Campus NMIT", "OSCode NMIT", "NMIT Hacks", "NMIT Robotics Club"])
         opp_rows.append((o_id, title, o_type, desc, req_skills, "Open to all B.Tech / M.Tech students", deadline, organizer, "https://nitte.edu.in/nmit/", "active", 1))
 
     cursor.executemany(
@@ -203,12 +207,19 @@ def seed_database():
         opp_rows
     )
 
-    # 5. Populating Verified NMIT Campus News & Alumni Stories
-    print("[Seeding] 5. Populating Campus News & Alumni Stories")
+    # 5. Populating 10 Official Verified NMIT Alumni Stories & News
+    print("[Seeding] 5. Populating 10 Official Verified NMIT Alumni Stories")
     news_rows = [
-        ("news_001", "NMIT Alumna Dr. Mamatha Maheshwarappa Leads UK Space Agency Payload Systems", "Dr. Mamatha Maheshwarappa (B.E. ECE alumna) serves as the Payload Systems Lead at the UK Space Agency, inspiring aerospace and satellite engineering research at NMIT.", "2026-08-15 10:00:00", "src_nmit_alumni", "Alumni Story"),
-        ("news_002", "Balen Shah (NMIT M.Tech 2016) Appointed Prime Minister of Nepal", "Balen Shah, an alumnus of NMIT M.Tech Structural Engineering (2016) and former Mayor of Kathmandu, continues to make national leadership strides.", "2026-08-20 12:00:00", "src_nmit_alumni", "Alumni Story"),
-        ("news_003", "NMIT Placement Drive Reaches Peak Package of ₹58.93 LPA", "Over 300 companies visited NMIT Bengaluru this season, offering over 1200 jobs with a highest package of ₹58.93 LPA.", "2026-08-28 09:00:00", "src_nmit_placements", "Placement News")
+        ("alumni_balen_shah", "Balen Shah (MTech Structural 2016) — First Independent Mayor of Kathmandu & Nepal Political Leader", "Balendra Shah, an alumnus of NMIT MTech Structural Engineering (2016), became the first independent candidate elected Mayor of Kathmandu, spearheading infrastructure and civic beautification.", "2026-08-10 10:00:00", "src_nmit_alumni", "Alumni Story"),
+        ("alumni_mamatha", "Dr. Mamatha Maheshwarappa (ECE 2005) — Payload Systems Lead at UK Space Agency", "Dr. Mamatha Maheshwarappa (B.E. ECE 2005 alumna) serves as the Payload Systems Lead at the UK Space Agency, advancing satellite communication and space systems engineering.", "2026-08-15 11:00:00", "src_nmit_alumni", "Alumni Story"),
+        ("alumni_meghashree", "Meghashree D R (CSE 2017) — IAS Officer & District Collector", "Meghashree D R (B.E. CSE 2017 alumna) cracked the Civil Services Examination and serves as an IAS Officer and District Collector in Kerala public administration.", "2026-08-18 09:30:00", "src_nmit_alumni", "Alumni Story"),
+        ("alumni_aniruddha", "Aniruddha Sastry (CSE 2018) — Playback Singer & Actor in Kannada Film Industry", "Aniruddha Sastry (B.E. CSE 2018 alumnus) built a creative career as a playback singer, actor, music producer, and lyricist in the Kannada cinema industry.", "2026-08-20 14:00:00", "src_nmit_alumni", "Alumni Story"),
+        ("alumni_prakash", "Prakash Matada (CSE 2005) — NatGeo Explorer & Wildlife Filmmaker (Planet Earth III)", "Prakash Matada (B.E. CSE 2005 alumnus) is a National Geographic Explorer and Wildscreen-recognized filmmaker whose cinematography was featured on BBC Planet Earth III.", "2026-08-22 16:00:00", "src_nmit_alumni", "Alumni Story"),
+        ("alumni_srinidhi", "Srinidhi Sudhindra (Aero 2018) — Wing Design Engineer at Airbus", "Srinidhi Sudhindra (B.E. Aeronautical 2018 alumnus) works as a Wing Design Engineer at Airbus, engineering aircraft structural design and supply-chain systems.", "2026-08-24 10:30:00", "src_nmit_alumni", "Alumni Story"),
+        ("alumni_shriram", "Shriram (EEE 2012) — Team Lead at ASML & Cisco SVP Award Winner", "Shriram (B.E. EEE 2012 alumnus) leads multidisciplinary semiconductor lithography engineering at ASML and won Cisco's SVP Award for Early Career Excellence.", "2026-08-25 12:00:00", "src_nmit_alumni", "Alumni Story"),
+        ("alumni_anirudh", "Anirudh Asokan (2013) — Software Engineer at Google & Tech Entrepreneur", "Anirudh Asokan (2013 alumnus) serves as a Software Engineer at Google and formerly co-founded Havstruck Solutions as CTO.", "2026-08-26 15:00:00", "src_nmit_alumni", "Alumni Story"),
+        ("alumni_roshan", "Roshan Sah (Aero 2017) — Space Systems Researcher at TCS Research (25+ Patents)", "Roshan Sah (B.E. Aeronautical 2017 alumnus) conducts space robotics and swirl combustion research at TCS Research with over 25 research papers and patents.", "2026-08-27 11:00:00", "src_nmit_alumni", "Alumni Story"),
+        ("alumni_sharath", "Sharath Appaiah (CSE 2009) — Co-Founder of Trebound & Monk Mantra", "Sharath Appaiah (B.E. CSE 2009 alumnus) co-founded Trebound, delivering over 2,000 corporate experiential learning and team-building programs.", "2026-08-28 09:00:00", "src_nmit_alumni", "Alumni Story")
     ]
     cursor.executemany(
         "INSERT INTO campus_news (news_id, headline, body, published_at, source_id, category) VALUES (?, ?, ?, ?, ?, ?)",
@@ -236,7 +247,7 @@ def seed_database():
 
     conn.commit()
     conn.close()
-    print("[Seeding] SUCCESS: Databricks Unity Catalog local database seeded successfully!")
+    print("[Seeding] SUCCESS: Databricks Unity Catalog local database updated with Official NMIT Alumni & Featured Clubs!")
 
 if __name__ == "__main__":
     seed_database()
