@@ -107,7 +107,7 @@ export const Home: React.FC = () => {
               <Card key={person.student_id} hoverable>
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                   <Avatar name={person.name} size="md" />
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <Link to={`/profile/${person.student_id}`}>
                       <h4 style={{ fontSize: '15px', fontWeight: 600 }}>{person.name}</h4>
                     </Link>

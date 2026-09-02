@@ -34,7 +34,7 @@ const ProtectedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <NavBar user={{ name: session.name }} onLogout={logout} />
-      <main style={{ flex: 1 }}>{children}</main>
+      <main style={{ flex: 1, paddingTop: '16px' }}>{children}</main>
     </div>
   );
 };
