@@ -1,0 +1,28 @@
+# Node / Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+
+# Python / Backend
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
+.pytest_cache/
+.coverage
+
+# Environment & Secrets
+.env
+.env.production
+.env.staging
+
+# System & IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
